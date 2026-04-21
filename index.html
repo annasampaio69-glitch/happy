@@ -18,6 +18,7 @@ body {
   top: 20px;
   left: 20px;
   font-size: 18px;
+  z-index: 1000;
 }
 
 #game {
@@ -32,6 +33,7 @@ body {
   font-size: 28px;
   cursor: pointer;
   user-select: none;
+  z-index: 999;
   transition: transform 0.2s;
 }
 
@@ -39,13 +41,17 @@ body {
   transform: scale(1.3);
 }
 
+/* mensagem final */
 #final {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: none;
   text-align: center;
+  background: rgba(0,0,0,0.7);
+  padding: 30px;
+  border-radius: 10px;
 }
 </style>
 </head>
@@ -72,7 +78,7 @@ const final = document.getElementById("final");
 
 let score = 0;
 
-// cria coração
+// cria corações
 function createHeart() {
   const heart = document.createElement("div");
   heart.className = "heart";
@@ -86,7 +92,6 @@ function createHeart() {
 
   game.appendChild(heart);
 
-  // movimento manual (mais confiável que animation)
   let speed = Math.random() * 2 + 2;
 
   function fall() {
@@ -101,24 +106,26 @@ function createHeart() {
   }
 
   fall();
+}
 
-  // clique
-  heart.onclick = () => {
-    heart.remove();
+// 🔥 EVENTO GLOBAL (resolve o bug do clique)
+document.addEventListener("click", function(e) {
+  if (e.target.classList.contains("heart")) {
+    e.target.remove();
     score++;
     scoreEl.textContent = score;
 
     if (score >= 10) {
       endGame();
     }
-  };
-}
+  }
+});
 
 function endGame() {
   final.style.display = "block";
 }
 
-// cria vários corações
+// spawn contínuo
 setInterval(createHeart, 700);
 </script>
 
