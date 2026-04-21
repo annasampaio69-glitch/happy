@@ -8,125 +8,67 @@
 body {
   margin: 0;
   background: #0d1117;
-  color: #fff;
-  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  font-family: Arial;
   overflow: hidden;
 }
 
-.hud {
+#scoreBox {
   position: fixed;
   top: 20px;
   left: 20px;
-  font-size: 18px;
-  z-index: 1000;
+  font-size: 20px;
 }
 
-#game {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-}
-
-/* coração */
 .heart {
   position: absolute;
-  font-size: 28px;
+  font-size: 30px;
   cursor: pointer;
-  user-select: none;
-  z-index: 999;
-  transition: transform 0.2s;
-}
-
-.heart:hover {
-  transform: scale(1.3);
-}
-
-/* mensagem final */
-#final {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: none;
-  text-align: center;
-  background: rgba(0,0,0,0.7);
-  padding: 30px;
-  border-radius: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="hud">
-  ❤️ Energia: <span id="score">0</span>/10
-</div>
-
-<div id="game"></div>
-
-<div id="final">
-  <h1>Missão concluída</h1>
-  <p>Nem o Naruto treinando anos conseguiria juntar tanta dedicação quanto você tem.</p>
-  <p>E no meio de tudo isso…</p>
-  <h2>eu te amo ❤️</h2>
-</div>
+<div id="scoreBox">❤️ Energia: <span id="score">0</span>/10</div>
 
 <script>
-const game = document.getElementById("game");
-const scoreEl = document.getElementById("score");
-const final = document.getElementById("final");
-
 let score = 0;
 
-// cria corações
 function createHeart() {
-  const heart = document.createElement("div");
+  let heart = document.createElement("div");
+  heart.innerHTML = "❤️";
   heart.className = "heart";
-  heart.innerText = "❤️";
 
-  let x = Math.random() * (window.innerWidth - 30);
-  let y = -30;
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.top = "0px";
 
-  heart.style.left = x + "px";
-  heart.style.top = y + "px";
+  document.body.appendChild(heart);
 
-  game.appendChild(heart);
+  let pos = 0;
 
-  let speed = Math.random() * 2 + 2;
+  let fall = setInterval(() => {
+    pos += 3;
+    heart.style.top = pos + "px";
 
-  function fall() {
-    y += speed;
-    heart.style.top = y + "px";
-
-    if (y < window.innerHeight) {
-      requestAnimationFrame(fall);
-    } else {
+    if (pos > window.innerHeight) {
+      clearInterval(fall);
       heart.remove();
     }
-  }
+  }, 20);
 
-  fall();
-}
-
-// 🔥 EVENTO GLOBAL (resolve o bug do clique)
-document.addEventListener("click", function(e) {
-  if (e.target.classList.contains("heart")) {
-    e.target.remove();
+  heart.onclick = function () {
+    heart.remove();
     score++;
-    scoreEl.textContent = score;
+    document.getElementById("score").innerText = score;
 
     if (score >= 10) {
-      endGame();
+      alert("eu te amo ❤️");
     }
-  }
-});
-
-function endGame() {
-  final.style.display = "block";
+  };
 }
 
-// spawn contínuo
-setInterval(createHeart, 700);
+setInterval(createHeart, 800);
 </script>
 
 </body>
