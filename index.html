@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>missao.exe</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0d1117;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* HUD */
+.hud {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 18px;
+}
+
+#game {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  cursor: crosshair;
+}
+
+/* corações */
+.heart {
+  position: absolute;
+  font-size: 24px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  from { transform: translateY(-50px); }
+  to { transform: translateY(100vh); }
+}
+
+/* mensagem final */
+#final {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #fff;
+  color: white;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hud">
+  ❤️ Energia: <span id="score">0</span>/10
+</div>
+
+<div id="game"></div>
+
+<div id="final">
+  <h1>Missão concluída</h1>
+  <p>Nem o Naruto treinando anos conseguiria juntar tanta dedicação quanto você tem.</p>
+  <p>E no meio de tudo isso…</p>
+  <h2>eu te amo ❤️</h2>
+</div>
+
+<script>
+const game = document.getElementById("game");
+const scoreEl = document.getElementById("score");
+const final = document.getElementById("final");
+
+let score = 0;
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "❤️";
+
+  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+
+  game.appendChild(heart);
+
+  heart.onclick = () => {
+    heart.remove();
+    score++;
+    scoreEl.textContent = score;
+
+    if (score >= 10) {
+      endGame();
+    }
+  };
+
+  setTimeout(() => heart.remove(), 5000);
+}
+
+function endGame() {
+  final.style.display = "block";
+}
+
+setInterval(createHeart, 800);
+</script>
+
+</body>
+</html>
