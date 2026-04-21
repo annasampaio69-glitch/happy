@@ -9,7 +9,7 @@ body {
   margin: 0;
   background: #0d1117;
   color: white;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   overflow: hidden;
 }
 
@@ -18,12 +18,14 @@ body {
   top: 20px;
   left: 20px;
   font-size: 20px;
+  z-index: 1000;
 }
 
 .heart {
   position: absolute;
   font-size: 30px;
   cursor: pointer;
+  z-index: 999;
 }
 </style>
 </head>
@@ -35,20 +37,21 @@ body {
 <script>
 let score = 0;
 
+// cria coração
 function createHeart() {
-  let heart = document.createElement("div");
+  const heart = document.createElement("div");
   heart.innerHTML = "❤️";
   heart.className = "heart";
 
-  heart.style.left = Math.random() * window.innerWidth + "px";
+  heart.style.left = Math.random() * (window.innerWidth - 30) + "px";
   heart.style.top = "0px";
 
   document.body.appendChild(heart);
 
   let pos = 0;
 
-  let fall = setInterval(() => {
-    pos += 3;
+  const fall = setInterval(() => {
+    pos += 4;
     heart.style.top = pos + "px";
 
     if (pos > window.innerHeight) {
@@ -57,17 +60,41 @@ function createHeart() {
     }
   }, 20);
 
-  heart.onclick = function () {
+  // clique FUNCIONANDO
+  heart.addEventListener("click", function () {
     heart.remove();
     score++;
     document.getElementById("score").innerText = score;
 
     if (score >= 10) {
-      alert("eu te amo ❤️");
+      showMessage();
     }
-  };
+  });
 }
 
+// mensagem final
+function showMessage() {
+  const msg = document.createElement("div");
+  msg.innerHTML = `
+    <div style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.9);
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+    ">
+      <h1>Missão concluída</h1>
+      <p>Nem o Naruto treinando anos conseguiria alcançar o nível que você tem.</p>
+      <h2>eu te amo ❤️</h2>
+    </div>
+  `;
+  document.body.appendChild(msg);
+}
+
+// gera corações
 setInterval(createHeart, 800);
 </script>
 
